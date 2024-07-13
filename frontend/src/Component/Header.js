@@ -1,10 +1,24 @@
 import React from 'react';
+import './Header.css';
+import logoImage from '/github/dj_library/frontend/src/Component/picture/jd_logo_small.png'; // ロゴ画像のパスを指定してください
+
 
 function Header() {
   return (
-    <div>
-        
+     <header className="header">
+    <div className="header-left">
+        <img src={logoImage} alt="Logo" className="logo-image" />
+        <h1 className="title">STUDIO</h1>
     </div>
+    <div className="header-right">
+        <div className="menu-icon">
+          <div className="menu-line"></div>
+          <div className="menu-line"></div>
+          <div className="menu-line"></div>
+        </div>
+      </div>
+    </header>
+
   )
 }
 
