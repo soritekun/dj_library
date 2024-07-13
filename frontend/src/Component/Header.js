@@ -1,6 +1,6 @@
 import React from 'react';
 import './Header.css';
-import logoImage from '/github/dj_library/frontend/src/Component/picture/jd_logo_small.png'; // ロゴ画像のパスを指定してください
+import logoImage from './picture/jd_logo_small.png'; // ロゴ画像のパスを指定してください
 
 
 function Header() {

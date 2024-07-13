@@ -6,6 +6,7 @@
 .input-SongList {
     margin-bottom: 10px;
     border-radius: 5px;
+    padding: 10px;
   }
 .box{
     color: #fff;
@@ -13,19 +14,28 @@
     border-radius: 5px;
     
 }
-.input-box{
-    color: white;
+
+.Music_Search{
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 10px;
+
 }
+
 .main {
-    background-color: black;
+    background-color: #333333;
+    min-height: 100vh;
+    max-height: auto;
 }
 .box-field {
     margin: 10px;
   }
 
   .container {
-    margin-top: 20px;
+   
     flex-grow: 1;
-    background-color: #343a40;
+    background-color:  #4a4a4a;
+    
   }
 
+  
