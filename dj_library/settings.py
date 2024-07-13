@@ -75,14 +75,8 @@ WSGI_APPLICATION = 'dj_library.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': BASE_DIR / 'dj_librarydb',
-        'USER': 'dj_libraryuser',
-        'PASSWORD': '0212Haruki',
-        'HOST': 'localhost', 
-        'PORT': '5432',
-        
-        
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -127,10 +121,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-FILE_CHARSET = 'utf-8' 
-DEFAULT_CHARSET = 'utf-8'
-
-TIME_ZONE = 'Asia/Tokyo'
-USE_TZ = True
