@@ -1,0 +1,31 @@
+.add-button {
+    background-color: #28a745;
+    margin-bottom: 10px;
+    color: white;
+}
+.input-SongList {
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #444;
+  }
+.box{
+    color: #fff;
+    padding-top: 15px;
+    border-radius: 5px;
+    
+}
+.input-box{
+    color: white;
+}
+.main {
+    background-color: black;
+}
+.box-field {
+    margin: 10px;
+  }
+
+  .container {
+    margin-top: 20px;
+    flex-grow: 1;
+    background-color: #808080;
+  }
