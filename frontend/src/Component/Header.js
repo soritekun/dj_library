@@ -3,6 +3,7 @@ import './Header.css';
 import logoImage from '/github/dj_library/frontend/src/Component/picture/dj_logo_big.png'; // ロゴ画像のパスを指定してください
 
 
+
 function Header() {
   return (
      <header className="header">
