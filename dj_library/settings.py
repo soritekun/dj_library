@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-v%yp&x75mb**%5(l6$w2&1ngl-#q4f@gkulebbrm(51p*-00_j'
 
-SPOTIFY_CLIRENT_ID='929fcdc60bca42fba925a3b515bf1ec5'
+SPOTIFY_CLIENT_ID='929fcdc60bca42fba925a3b515bf1ec5'
 SPOTIFY_CLIENT_SECRET='5f105f0c0bca4c8399f58294f8932d4e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -48,21 +48,21 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorMiddleware',
 ]
 
 # settings.py
 
 CORS_ALLOWED_ORIGINS = [
-    "http://35.79.17.142:8000",
-    "https://35.79.17.142:8000",  # Add HTTPS version if needed
+    "http://35.79.17.142:8000",# Add HTTPS version if needed
 ]
 
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'dj_library.urls'
 
