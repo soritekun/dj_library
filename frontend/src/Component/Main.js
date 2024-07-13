@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SongResults from './Songresults';
+import SearchSongResults from './SearchSongresults';
 import { Typography, Container, TextField, IconButton, Button, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
@@ -10,7 +10,7 @@ import "./Main.css";
 function Main() {
   const [songList, setSongList] = useState([]);
   const [newSong, setNewSong] = useState('');
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   const addSong = () => {
     if (newSong.trim() !== '') {
@@ -20,7 +20,7 @@ function Main() {
   };
 
   const search_songs = async() => {
-    const response = await fetch('../../../backend/views.py',{
+    const response = await fetch('http://127.0.0.1:8000/search/',{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,7 +29,6 @@ function Main() {
     });
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setSongList(data);
       }
       else {
@@ -38,10 +37,25 @@ function Main() {
 
     }; 
 
-  
+  function display_songs(songList) {
+    if (songList.length == [] && !Array.isArray(songList)) {
+      return (
+        <div className='no-songs'>
+          <Typography variant="h5" component="div">
+            曲が見つかりません
+          </Typography>
+          <MusicNoteIcon sx={{ fontSize: 100 }} />
+        </div>
+      );
+    }
+    else {
+    return songList.map((songs, index) => (
+      <SearchSongResults key={index} songs={[songs]} />
+    ));
+  } }
 
 
-  const filteredSongs = songList.filter(song => song.includes(searchTerm));
+  const filteredSongs = songList.filter(song => song.name && song.name.includes(searchTerm));
 
   return (
     <div className='main'>
@@ -54,8 +68,10 @@ function Main() {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
+              setNewSong(e.target.value);
               search_songs();
-            }}
+            }
+          }
 
             InputProps={{
               startAdornment: (
@@ -64,7 +80,7 @@ function Main() {
             }}
           />
 
-          <SongResults songs={songList} />
+          {/* <SearchSongResults songs={songList} /> */}
 
           <div className='Search_Song_add'>
             <Button onClick={addSong} variant="contained" style={{backgroundColor: 'green'}} startIcon={<AddIcon />} sx = {{mb:2}}>
@@ -72,9 +88,10 @@ function Main() {
             </Button>
           </div>
         </div>
+        {display_songs(songList)}
         
 
-        <div className='input-SongList'>
+        {/* <div className='input-SongList'>
           <div className='input-Box'>
             {filteredSongs.map((song, index) => (
               <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -91,7 +108,7 @@ function Main() {
               </Box>
             ))}
           </div>
-        </div>
+        </div> */}
         
 
         {/* <div>

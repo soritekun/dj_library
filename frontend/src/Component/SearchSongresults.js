@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 
-function SongResults({ songs }) {
+function SearchSongResults({ songs }) {
   return (
     <div>
       {songs.map((song, index) => (
@@ -11,7 +11,7 @@ function SongResults({ songs }) {
               {song.name}
             </Typography>
             <Typography variant="body2">
-              {(song.artistsn || []).map(artist => artist.name).join(', ')}
+              {(song.artists || []).map(artist => artist.name).join(', ')}
             </Typography>
           </CardContent>
         </Card>
@@ -20,4 +20,4 @@ function SongResults({ songs }) {
   );
 }
 
-export default SongResults;
+export default SearchSongResults;
