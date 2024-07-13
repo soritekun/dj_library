@@ -1,0 +1,1 @@
+import Side from '.Component/Side';
