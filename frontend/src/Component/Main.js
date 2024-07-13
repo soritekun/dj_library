@@ -46,6 +46,7 @@ function Main() {
                   fullWidth
                   variant="outlined"
                   value={song}
+                  style={{backgroundColor: '#444'}}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -55,7 +56,7 @@ function Main() {
           </div>
         </div>
 
-        <div className='Music_add_bottom'>
+        <div>
           <TextField
             fullWidth
             variant="outlined"
@@ -63,7 +64,7 @@ function Main() {
             value={newSong}
             onChange={(e) => setNewSong(e.target.value)}
           />
-          <Button onClick={addSong} variant="contained" color="primary" startIcon={<AddIcon />}>
+          <Button onClick={addSong} variant="contained" style={{backgroundColor: 'green'}} startIcon={<AddIcon />} sx = {{mb:2}}>
             曲を追加
           </Button>
         </div>
