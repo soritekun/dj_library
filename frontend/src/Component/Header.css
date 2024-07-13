@@ -12,13 +12,25 @@
   align-items: center;
 }
 
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
 .logo-image {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
+  animation: rotate 20s linear infinite;
 }
+
+
 
 .title {
   color: white;
