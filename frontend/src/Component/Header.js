@@ -1,1 +1,12 @@
-import Header from '.Component/Header';
+import React from 'react';
+
+function Header() {
+  return (
+    <div>
+        
+    </div>
+  )
+}
+
+
+export default Header;
