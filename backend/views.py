@@ -49,14 +49,25 @@ def search_songs(request):
         if query == None:
             return JsonResponse({'error': 'None'}, status=400)
         spotify = get_spotify_client()
-        results = spotify.search(q=query, type='track', limit=1)
-        return JsonResponse(results['tracks']['items'], safe=False)
+        results = spotify.search(q=query, type='track', limit=3)
+        tracks = [{
+            'id':item['id'],
+            'name':item['name'],
+            'artist':item['artists'][0]['name']
+        }for item in results['tracks']['items']]
+        return JsonResponse(tracks, safe=False)
     return JsonResponse({'error': 'Invalid request method'}, status=400)
     
 @api_view(['POST'])
 def save_selected_songs(request):
     if request.method == 'POST':
-        selected_songs = request.data.getlist('selected_songs')
+        playlist_name = request.data.get('playlist_name', '')
+        selected_songs = request.data.getlist('selected_songs', [])
+        
+        if not playlist_name or not selected_songs:
+            return JsonResponse({'error': "プレイリストの名前、もしくは歌の入力がまだです"}, status = 400)
+            
+        
         spotify = get_spotify_client()
         track_ids = []
         for song_id in selected_songs:
@@ -79,32 +90,53 @@ def save_selected_songs(request):
                 features['valence'],
                 features['tempo']
             ]
-            song, created = Song.objects.get_or_create(
-                id=track_f[0],
-                name=track_f[1],
-                artist=track_f[2],
-                danceability=track_f[3],
-                energy=track_f[4],
-                key=track_f[5],
-                loudness=track_f[6],
-                mode=track_f[7],
-                speechiness=track_f[8],
-                acousticness=track_f[9],
-                instrumentalness=track_f[10],
-                liveness=track_f[11],
-                valence=track_f[12],
-                tempo=track_f[13]
-            )
+            # song, created = Song.objects.get_or_create(
+            #     id=track_f[0],
+            #     name=track_f[1],
+            #     artist=track_f[2],
+            #     danceability=track_f[3],
+            #     energy=track_f[4],
+            #     key=track_f[5],
+            #     loudness=track_f[6],
+            #     mode=track_f[7],
+            #     speechiness=track_f[8],
+            #     acousticness=track_f[9],
+            #     instrumentalness=track_f[10],
+            #     liveness=track_f[11],
+            #     valence=track_f[12],
+            #     tempo=track_f[13]
+            # )
             
-            track_ids.append(track_f[0])
+            if "playlists" not in request.session:
+                request.session['playlists'] = {}
+            if playlist_name not in request.session['playlists']:
+                request.session['playlists'][playlist_name] = []
+            request.session['playlists'][playlist_name].append(track_f)
+            track_ids.append(song_id)
         
         recommended_tracks = get_recommendations(track_ids, 10)#第二引数おすすめの数
         
         for track in recommended_tracks:
-            track_id = track.pop('id')
-            song, created=Song.objects.get_or_create(
-                id=track_id,
-                defaults=track
-            )
+            # track_id = track.pop('id')
+            # song, created=Song.objects.get_or_create(
+            #     id=track_id,
+            #     defaults=track
+            # )
+            request.session['playlists'][playlist_name].append(track)
         return JsonResponse(recommended_tracks, status=201, safe = False)
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+@api_view(['GET'])
+def get_playlists(request):
+    playlists = request.session.get('playlists', {})
+    return JsonResponse(playlists, safe = False)
+    
+@api_view(['GET'])
+def get_track(request, playlist_name):
+    playlists = request.session.get('playlists', {})
+    playlist = playlists.get(playlist_name, [])
+    
+    if not playlist:
+        return JsonResponse({"error":"プレイリストが見つかりませんでした"}, status = 404)
+        
+    return JsonResponse(playlist, safe = False)
