@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from .models import Song
 from django.conf import settings
 import spotipy
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 from spotipy.oauth2 import SpotifyClientCredentials
 from rest_framework.decorators import api_view
 
@@ -14,7 +16,10 @@ def get_spotify_client():
 
 def get_recommendations(track_ids, num_recommendations):
     spotify = get_spotify_client()
-    recommendations = spotify.recommendations(seed_tracks=track_ids,limit=num_recommendations)
+    ids = []
+    for i in track_ids:
+        ids.append(i[0])
+    recommendations = spotify.recommendations(seed_tracks=ids,limit=100)#サンプル数
     recommended_tracks = []
     
     for track in recommendations['tracks']:
@@ -40,7 +45,48 @@ def get_recommendations(track_ids, num_recommendations):
             'tempo': features['tempo']
         })
         
-    return recommended_tracks
+    selected_features = np.array([
+        [
+            track[3],
+            track[4],
+            track[5],
+            track[6],
+            track[7],
+            track[8],
+            track[9],
+            track[10],
+            track[11],
+            track[12],
+            track[13]
+        ]for track in track_ids
+    ])
+    
+    recommended_features = np.array([
+        [
+            track['danceability'],
+            track['energy'],
+            track['key'],
+            track['loudness'],
+            track['mode'],
+            track['speechiness'],
+            track['acousticness'],
+            track['instrumentalness'],
+            track['liveness'],
+            track['valence'],
+            track['tempo']
+        ]for track in recommended_tracks
+    ])
+    
+    similarities = cosine_similarity(selected_features, recommended_features)
+    top = np.argsort(similarities, axis = 1)[:, ::-1][:, :num_recommendations]
+    
+    print(top)
+    
+    selected_recommendations = []
+    for indices in top:
+        for idx in indices:
+            selected_recommendations.append(recommended_tracks[idx])
+    return selected_recommendations
     
 @api_view(['POST'])
 def search_songs(request):
@@ -69,7 +115,7 @@ def save_selected_songs(request):
             
         
         spotify = get_spotify_client()
-        track_ids = []
+        track_ids = []#idsという名の曲情報全リスト
         for song_id in selected_songs:
             track = spotify.track(song_id)
             features = spotify.audio_features(song_id)[0]
@@ -112,7 +158,7 @@ def save_selected_songs(request):
             if playlist_name not in request.session['playlists']:
                 request.session['playlists'][playlist_name] = []
             request.session['playlists'][playlist_name].append(track_f)
-            track_ids.append(song_id)
+            track_ids.append(track_f)
         
         recommended_tracks = get_recommendations(track_ids, 10)#第二引数おすすめの数
         
