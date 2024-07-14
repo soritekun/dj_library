@@ -19,7 +19,7 @@ def get_recommendations(track_ids, num_recommendations):
     ids = []
     for i in track_ids:
         ids.append(i[0])
-    recommendations = spotify.recommendations(seed_tracks=ids,limit=100)#サンプル数
+    recommendations = spotify.recommendations(seed_tracks=ids,limit=10)#サンプル数
     recommended_tracks = []
     
     for track in recommendations['tracks']:
@@ -77,14 +77,19 @@ def get_recommendations(track_ids, num_recommendations):
         ]for track in recommended_tracks
     ])
     
+    print(selected_features)
+    print(recommended_features)
+    
     similarities = cosine_similarity(selected_features, recommended_features)
     top = np.argsort(similarities, axis = 1)[:, ::-1][:, :num_recommendations]
-    
+    print(similarities)
     print(top)
     
     selected_recommendations = []
     for indices in top:
         for idx in indices:
+            if(len(selected_recommendations) == num_recommendations):
+                break;
             selected_recommendations.append(recommended_tracks[idx])
     return selected_recommendations
     
